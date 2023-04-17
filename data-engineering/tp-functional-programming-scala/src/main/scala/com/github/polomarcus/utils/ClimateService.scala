@@ -16,7 +16,10 @@ object ClimateService {
    * @param description "my awesome sentence contains a key word like climate change"
    * @return Boolean True
    */
-  def isClimateRelated(description: String): Boolean = ???
+  def isClimateRelated(description: String): Boolean = {
+    val climateKeywords = List("global warming", "IPCC", "climate change")
+    climateKeywords.exists(keyword => description.toLowerCase.contains(keyword.toLowerCase))
+  }
 
   /**
    * parse a list of raw data and transport it with type into a list of CO2Record
@@ -26,9 +29,16 @@ object ClimateService {
    * you can access to Tuple with myTuple._1, myTuple._2, myTuple._3
    */
   def parseRawData(list: List[(Int, Int, Double)]) : List[Option[CO2Record]] = {
-    list.map { record => ??? }
-    ???
+    list.map { record =>
+      val year = record._1
+      val month = record._2
+      val ppm = record._3
+      val co2Record = CO2Record(year, month, ppm)
+      if (co2Record.isValidPpmValue) Some(co2Record)
+      else None
+    }
   }
+
 
   /**
    * remove all values from december (12) of every year
@@ -36,15 +46,29 @@ object ClimateService {
    * @param list
    * @return a list
    */
-  def filterDecemberData(list: List[Option[CO2Record]]) : List[CO2Record] = ???
-
+  def filterDecemberData(list: List[CO2Record]): List[Option[CO2Record]] = {
+    list
+      .filter(record => record.month != 12) // filter out December records
+      .map(Some(_)) // wrap the filtered records in Option again
+  }
 
   /**
    * **Tips**: look at the read me to find some tips for this function
    */
-  def getMinMax(list: List[CO2Record]) : (Double, Double) = ???
+  def getMinMax(list: List[CO2Record]): Option[(Double, Double)] = {
+    if (list.isEmpty) {
+      None
+    } else {
+      val ppmValues = list.map(_.ppm)
+      Some((ppmValues.min, ppmValues.max))
+    }
+  }
 
-  def getMinMaxByYear(list: List[CO2Record], year: Int) : (Double, Double) = ???
+  def getMinMaxByYear(list: List[CO2Record], year: Int): Option[(Double, Double)] = {
+    val yearRecords = list.filter(_.year == year)
+    Some((yearRecords.map(_.ppm).min, yearRecords.map(_.ppm).max))
+  }
+
 
   /**
    * use this function side src/main/scala/com/polomarcus/main/Main (with sbt run)
