@@ -6,10 +6,17 @@ To process a large amount of data partitioned on a data lake, you can use data p
 
 Some questions :
 * What is Spark RDD API ?
+
+The RDD (Resilient Distributed Datasets) API is the foundational API of Spark, which provides a resilient distributed collection of elements that can be processed in parallel across a cluster of machines. RDDs are immutable and fault-tolerant, meaning they can automatically recover from node failures. The RDD API provides a wide range of transformation and action functions for data processing.
 * What is Spark Dataset API ?
+
+The Dataset API is an extension of the DataFrame API, which provides a type-safe, object-oriented programming interface to work with structured data in Spark. The Dataset API provides a similar programming model as RDDs, but with the performance optimizations of DataFrames. Datasets can be used to leverage Spark's optimized execution engine while still providing a strong typing system.
 * With which languages can you use Spark ? 
+
+Spark provides APIs for several programming languages, including Scala, Java, Python, R, and SQL. Spark's APIs are available for all these languages, allowing users to leverage the strengths of their preferred programming languages.
 * Which data sources or data sinks can Spark work with ? 
 
+Spark can work with a wide range of data sources and data sinks, including Hadoop Distributed File System (HDFS), Apache Cassandra, Apache HBase, Apache Kafka, Amazon S3, and many others. Spark provides built-in connectors to these data sources and also allows users to define their own custom connectors to work with any data source. Additionally, Spark provides several output formats, including CSV, JSON, Parquet, and Avro, among others.
 ### Analyse data with Apache Spark and Scala 
 One engineering team of your company created for you a TV News data stored as JSON inside the folder `data-news-json/`.
 
