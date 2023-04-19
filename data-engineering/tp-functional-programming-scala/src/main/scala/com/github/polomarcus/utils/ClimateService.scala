@@ -46,10 +46,11 @@ object ClimateService {
    * @param list
    * @return a list
    */
-  def filterDecemberData(list: List[CO2Record]): List[Option[CO2Record]] = {
-    list
-      .filter(record => record.month != 12) // filter out December records
-      .map(Some(_)) // wrap the filtered records in Option again
+  def filterDecemberData(list: List[Option[CO2Record]]): List[CO2Record] = {
+    val filteredList = list.flatten // Remove None values from the list
+      .filter(record => record.month != 12) // Filter out records with month equal to 12
+      .map(_.copy()) // Create a copy of each record to avoid modifying the original objects
+    filteredList
   }
 
   /**
@@ -80,8 +81,13 @@ object ClimateService {
    */
   def showCO2Data(list: List[Option[CO2Record]]): Unit = {
     logger.info("Call ClimateService.filterDecemberData here")
+    val filteredList = filterDecemberData(list)
 
     logger.info("Call record.show function here inside a map function")
+    filteredList.foreach(record => println(record.show))
+
+    val noneCount = list.count(_.isEmpty)
+    logger.info(s"Number of None values in the list: $noneCount")
   }
 
   /**
