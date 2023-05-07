@@ -41,28 +41,29 @@ object Main {
 
     filteredNewsAboutClimate.show()
 
+    
     // Count how many tv news we have in our data source
-    //val count = NewsService.getNumberOfNews(newsDatasets)
-    //logger.info(s"We have ${count} news in our dataset")
+    val count = NewsService.getNumberOfNews(newsDatasets)
+    logger.info(s"We have ${count} news in our dataset")
 
     // Show how many news we have talking about climate change compare to others news (not related climate)
     // Tips: use a groupBy
-    //filteredNewsAboutClimate.groupBy($"containsWordGlobalWarming").count().show()
+    filteredNewsAboutClimate.groupBy("containsWordGlobalWarming").count().show()
 
     // Use SQL to query a "news" table
-    //enrichedDataset.createOrReplaceTempView("news")
+    enrichedDataset.createOrReplaceTempView("news")
     //spark.sql("SELECT title FROM news WHERE containsWordGlobalWarming = true").show()
 
     // Use strongly typed dataset to be sure to not introduce a typo to your SQL Query
     //case class NewsTitle(title: String)
     //val filteredTitles = enrichedDataset.filter(_.containsWordGlobalWarming).map(news => NewsTitle(news.title))
     //filteredTitles.show()
-
+    val filteredTitles = spark.sql("SELECT count(*) as count FROM news WHERE containsWordGlobalWarming=true")
+    filteredTitles.show()
     // Save it as a columnar format with Parquet with a partition by date and media
-    //filteredTitles.write
-      //.partitionBy("date", "media")
-      //.mode("overwrite")
-      //.parquet("./data-news-parquet")
+    enrichedDataset.write
+      .partitionBy("date", "media")
+      .parquet("./enriched-news-parquet")
 
     logger.info("Stopping the app")
     System.exit(0)
